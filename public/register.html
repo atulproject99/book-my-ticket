@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      /* Redirect if already logged in */
+      const token = localStorage.getItem("token");
+      if (token) {
+        window.location.href = "/";
+      }
+    </script>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen bg-slate-900">
+    <div class="bg-slate-800 p-8 rounded-2xl shadow-xl w-[400px]">
+      <h2 class="text-2xl text-white font-bold mb-6 text-center">Register</h2>
+
+      <input
+        id="name"
+        placeholder="Enter Name"
+        class="w-full mb-4 p-3 rounded bg-slate-700 text-white"
+      />
+
+      <input
+        id="mobile"
+        type="number"
+        placeholder="Enter Mobile Number"
+        class="w-full mb-4 p-3 rounded bg-slate-700 text-white"
+      />
+
+      <input
+        id="email"
+        type="email"
+        placeholder="Enter Email"
+        class="w-full mb-4 p-3 rounded bg-slate-700 text-white"
+      />
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Enter Password"
+        class="w-full mb-6 p-3 rounded bg-slate-700 text-white"
+      />
+
+      <button
+        onclick="registerUser()"
+        class="w-full bg-emerald-500 hover:bg-emerald-400 text-white py-3 rounded"
+      >
+        Register
+      </button>
+
+      <p id="msg" class="text-center mt-4 text-sm text-red-400"></p>
+
+      <p class="text-center mt-4 text-slate-300">
+        Already have an account?
+        <a href="/login.html" class="text-emerald-400 hover:underline">
+          Login here
+        </a>
+      </p>
+    </div>
+
+    <script>
+      async function registerUser() {
+        const name = document.getElementById("name").value;
+        const mobileNo = document.getElementById("mobile").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        if (!name || !mobileNo || !email || !password) {
+          document.getElementById("msg").innerText = "All fields are required";
+          return;
+        }
+
+        try {
+          const res = await fetch("/auth/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name,
+              mobileNo,
+              email,
+              password,
+            }),
+          });
+
+          const data = await res.json();
+
+          if (!data.status) {
+            document.getElementById("msg").innerText = data.message;
+            return;
+          }
+
+          /* Success message */
+          document.getElementById("msg").innerText =
+            "Registration successful! Redirecting to login...";
+
+          /* Redirect after short delay */
+          setTimeout(() => {
+            window.location.href = "/login.html";
+          }, 1500);
+        } catch (error) {
+          document.getElementById("msg").innerText =
+            "Registration failed: " + error.message;
+        }
+      }
+    </script>
+  </body>
+</html>
