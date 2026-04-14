@@ -153,9 +153,9 @@ async function register(req, res) {
     const body = req.body;
 
     if (!body) return sendBadResponse(res, "Data required");
-
+    /// Take inputs from user
     const { name, mobileNo, email, password } = req.body;
-
+    /// Validation
     if (
       !name ||
       !mobileNo ||
@@ -170,11 +170,11 @@ async function register(req, res) {
         res,
         "Data can't be empty or invalid type[name,mobileNo,email,password]",
       );
-
+    /// Hashing to password
     const hashedPassword = await hashPassword(password);
 
     const db = await pool.connect();
-
+    /// Inset query
     const insertQuery =
       "INSERT INTO users(name, email, mobile_no,password) VALUES ($1, $2, $3,$4) RETURNING id, name, email, mobile_no, created_at";
 
@@ -190,10 +190,10 @@ async function register(req, res) {
     if (result.rowCount > 0)
       return sendOkResponse(
         res,
-        "Registeration successfully please login",
+        "Registration successfully please login",
         result.rows[0],
       );
-    else return sendBadResponse(res, "User registeration not failed!");
+    else return sendBadResponse(res, "User registration  failed!");
   } catch (error) {
     throw new Error(error.message);
   }
@@ -204,16 +204,14 @@ async function login(req, res) {
     const body = req.body;
 
     if (!body) return sendBadResponse(res, "Data required");
-
+    /// Take user inputs
     const { email, password } = req.body;
-
+    /// Validation
     if (!email || !password || !isString(email) || !isString(password))
       return sendBadResponse(
         res,
         "Data can't be empty or invalid type[email,password]",
       );
-
-    const hasedPassword = hashPassword(password);
 
     const db = await pool.connect();
 
