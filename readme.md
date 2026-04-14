@@ -1,8 +1,9 @@
 # Book My Ticket
 
-A movie/flight ticket booking system built with **Node.js, Express, PostgreSQL, and vanilla HTML/JS**. This application demonstrates user authentication, database integration, and concurrency control for seat booking.
+A movie/flight ticket booking system built with **Node.js, Express, PostgreSQL, and HTML/JS**. This application demonstrates user authentication, database integration, and concurrency control for seat booking.
 
 ## Tech Stack
+
 - **Backend:** Node.js, Express
 - **Database:** PostgreSQL
 - **Authentication:** JSON Web Tokens (JWT), bcrypt
@@ -10,20 +11,24 @@ A movie/flight ticket booking system built with **Node.js, Express, PostgreSQL, 
 - **Infrastructure:** Docker Compose (for local database provisioning)
 
 ## Prerequisites
-- Node.js (v16+)
-- Docker & Docker Compose (for local database) 
 
-*Alternatively, you can provide your own remote PostgreSQL Database by configuring the `.env` file.*
+- Node.js (v16+)
+- Docker & Docker Compose (for local database)
+
+_Alternatively, you can provide your own remote PostgreSQL Database by configuring the `.env` file._
 
 ## Setup & Run Locally
 
 ### 1. Install Dependencies
+
 ```bash
 npm install
 ```
 
 ### 2. Configure Environment Variables
+
 Create or modify the `.env` file in the root directory:
+
 ```env
 ACCESS_TOKEN_SECRET=your_jwt_secret
 ACCESS_TOKEN_EXPIRY=15m
@@ -32,22 +37,29 @@ NODE_ENV=development # Set to production if using a remote database
 ```
 
 ### 3. Start the Database
+
 The project includes a `docker-compose.yml` to quickly spin up a PostgreSQL instance.
+
 ```bash
 npm run db:up
 ```
-*This starts a postgres instance on port 5433 with user `postgres`, password `postgres`, and db `sql_class_2_db`.*
+
+_This starts a postgres instance on port 5433 with user `postgres`, password `postgres`, and db `sql_class_2_db`._
 
 ### 4. Run the Server
+
 ```bash
 npm run dev
 ```
-*This uses nodemon to start `index.mjs` on port `8080`. During startup, the application's `initDB()` function will automatically connect to the database, create the `users` and `seats` tables, and seed the database with 20 empty seats.*
+
+_This uses nodemon to start `index.mjs` on port `8080`. During startup, the application's `initDB()` function will automatically connect to the database, create the `users` and `seats` tables, and seed the database with 20 empty seats._
 
 **The application will be accessible at:** `http://localhost:8080`
 
 ### 5. Stop the Database
+
 When you're done, you can stop the database container:
+
 ```bash
 npm run db:down
 ```
@@ -73,6 +85,7 @@ npm run db:down
 ### Authentication
 
 #### 1. Register User
+
 - **URL:** `/auth/register`
 - **Method:** `POST`
 - **Body:**
@@ -88,6 +101,7 @@ npm run db:down
 - **Error Response:** `404 Not Found` (Missing or invalid data).
 
 #### 2. Login User
+
 - **URL:** `/auth/login`
 - **Method:** `POST`
 - **Body:**
@@ -103,25 +117,29 @@ npm run db:down
 ### Public Routes
 
 #### 3. Application Entrypoint
+
 - **URL:** `/`
 - **Method:** `GET`
 - **Response:** Serves the `index.html` static file.
 
 #### 4. Get Movie Details
+
 - **URL:** `/movie`
 - **Method:** `GET`
 - **Response:** `200 OK` with JSON object containing mock movie data (Title, duration, show time, language).
 
 ### Protected Routes (Requires JWT)
 
-*These routes require an `Authorization` header with a valid Bearer token (`Authorization: Bearer <accessToken>`).*
+_These routes require an `Authorization` header with a valid Bearer token (`Authorization: Bearer <accessToken>`)._
 
 #### 5. Get All Seats
+
 - **URL:** `/seats`
 - **Method:** `GET`
 - **Response:** `200 OK` with an array of seat objects, including their `isbooked` status and associated `user_id`.
 
 #### 6. Book a Seat
+
 - **URL:** `/:id/:name`
 - **Method:** `PUT`
 - **Path Parameters:**
