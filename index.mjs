@@ -13,17 +13,22 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 /* ================= CONFIG ================= */
 const port = process.env.PORT || 8080;
 
-const pool = new pg.Pool({
-  host: "localhost",
-  port: 5433,
-  user: "postgres",
-  password: "postgres",
-  database: "sql_class_2_db",
-  max: 20,
-  connectionTimeoutMillis: 0,
-  idleTimeoutMillis: 0,
-});
+const isProduction = process.env.NODE_ENV === "production";
 
+const pool = new pg.Pool(
+  isProduction
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+      }
+    : {
+        host: "localhost",
+        port: 5433,
+        user: "postgres",
+        password: "postgres",
+        database: "sql_class_2_db",
+      },
+);
 /* ================= APP INIT ================= */
 const app = new express();
 // Serve static files
