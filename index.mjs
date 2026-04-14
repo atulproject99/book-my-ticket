@@ -20,7 +20,6 @@ const pool = new pg.Pool(
     ? {
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false },
-        family: 4,
       }
     : {
         host: "localhost",
@@ -110,8 +109,6 @@ const authentication = (req, res, next) => {
 
 /* ================= DATABASE INIT ================= */
 async function initDB() {
-  console.log("Hello");
-
   try {
     const createTablesText = `
       CREATE TABLE IF NOT EXISTS seats (
